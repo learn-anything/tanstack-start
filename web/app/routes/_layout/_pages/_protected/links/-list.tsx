@@ -33,7 +33,6 @@ import { useActiveItemScroll } from "~/hooks/use-active-item-scroll"
 import { isDeleteConfirmShownAtom } from "."
 import { useLinkActions } from "~/hooks/actions/use-link-actions"
 import { useNavigate, useSearch } from "@tanstack/react-router"
-import { useAwaitableNavigate } from "~/hooks/use-awaitable-navigate"
 
 interface LinkListProps {}
 
@@ -45,7 +44,6 @@ const measuring: MeasuringConfiguration = {
 
 const LinkList: React.FC<LinkListProps> = () => {
   const navigate = useNavigate()
-  const awaitableNavigate = useAwaitableNavigate()
   const isTouchDevice = useTouchSensor()
   const lastActiveIndexRef = React.useRef<number | null>(null)
   const [activeItemIndex, setActiveItemIndex] = React.useState<number | null>(
@@ -300,7 +298,7 @@ const LinkList: React.FC<LinkListProps> = () => {
                           setActiveItemIndex(index)
                         }}
                         onFormClose={async () => {
-                          await awaitableNavigate({ to: "/links" })
+                          navigate({ to: "/links" })
                           setActiveItemIndex(lastActiveIndexRef.current)
                           setKeyboardActiveIndex(lastActiveIndexRef.current)
                         }}
