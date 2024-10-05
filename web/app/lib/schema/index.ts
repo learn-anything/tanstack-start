@@ -2,8 +2,8 @@ import { CoMap, co, Account, Profile } from "jazz-tools"
 import { PersonalPageLists } from "./personal-page"
 import { PersonalLinkLists } from "./personal-link"
 import { ListOfTopics } from "./master/topic"
-// import { ListOfTasks } from "./tasks"
-// import { JournalEntryLists } from "./journal"
+import { ListOfTasks } from "./task"
+import { JournalEntryLists } from "./journal"
 
 declare module "jazz-tools" {
   interface Profile {
@@ -26,9 +26,8 @@ export class UserRoot extends CoMap {
   topicsLearning = co.ref(ListOfTopics)
   topicsLearned = co.ref(ListOfTopics)
 
-  // TODO: migrate
-  //   tasks = co.ref(ListOfTasks)
-  //   journalEntries = co.ref(JournalEntryLists)
+  tasks = co.ref(ListOfTasks)
+  journalEntries = co.ref(JournalEntryLists)
 }
 
 export class LaAccount extends Account {
@@ -61,9 +60,8 @@ export class LaAccount extends Account {
           topicsLearning: ListOfTopics.create([], { owner: this }),
           topicsLearned: ListOfTopics.create([], { owner: this }),
 
-          // TODO: migrate
-          //   tasks: ListOfTasks.create([], { owner: this }),
-          //   journalEntries: JournalEntryLists.create([], { owner: this }),
+          tasks: ListOfTasks.create([], { owner: this }),
+          journalEntries: JournalEntryLists.create([], { owner: this }),
         },
         { owner: this },
       )
