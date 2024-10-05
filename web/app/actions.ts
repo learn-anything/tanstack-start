@@ -18,6 +18,23 @@ const DEFAULT_VALUES = {
   FAVICON: null,
 }
 
+export const getFeatureFlag = createServerFn(
+  "GET",
+  async (data: { name: string }, { request }) => {
+    const auth = await getAuth(request)
+
+    if (!auth.userId) {
+      throw new Error("Unauthorized")
+    }
+
+    const response = await get.featureFlag.with({
+      name: data.name,
+    })
+
+    return response
+  },
+)
+
 export const sendFeedbackFn = createServerFn(
   "POST",
   async (data: { content: string }, { request }) => {

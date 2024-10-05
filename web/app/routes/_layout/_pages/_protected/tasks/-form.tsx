@@ -7,13 +7,11 @@ import { useAccount } from "@/lib/providers/jazz-provider"
 import { LaIcon } from "@/components/custom/la-icon"
 import { Checkbox } from "@/components/ui/checkbox"
 import { DatePicker } from "~/components/custom/date-picker"
-import { format, parse } from "date-fns"
+import { format } from "date-fns"
+import { useSearch } from "@tanstack/react-router"
 
-interface TaskFormProps {
-  filter?: "today" | "upcoming" | undefined
-}
-
-export const TaskForm: React.FC<TaskFormProps> = ({ filter }) => {
+export const TaskForm: React.FC = () => {
+  const { filter } = useSearch({ from: "/_layout/_pages/_protected/tasks/" })
   const [title, setTitle] = useState("")
   const [dueDate, setDueDate] = useState<Date | undefined>(
     filter === "today" ? new Date() : undefined,

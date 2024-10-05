@@ -66,6 +66,14 @@ export const renderHTMLLikeElement = (
   )
 }
 
+export function calendarFormatDate(date: Date): string {
+  return date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  })
+}
+
 export * from "./force-graph"
 export * from "./keyboard"
 export * from "./env"

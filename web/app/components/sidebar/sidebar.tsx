@@ -2,7 +2,7 @@ import * as React from "react"
 import { useMedia } from "@/hooks/use-media"
 import { useAtom } from "jotai"
 import { LogoIcon } from "@/components/icons/logo-icon"
-import { Button, buttonVariants } from "@/components/ui/button"
+import { buttonVariants } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { isCollapseAtom } from "@/store/sidebar"
 import { useAccountOrGuest } from "@/lib/providers/jazz-provider"
@@ -13,10 +13,8 @@ import { LinkSection } from "./partials/link-section"
 import { PageSection } from "./partials/page-section"
 import { TopicSection } from "./partials/topic-section"
 import { ProfileSection } from "./partials/profile-section"
-
-// TODO: migrate
-// import { TaskSection } from "./partial/task-section"
-// import { JournalSection } from "./partial/journal-section"
+import { JournalSection } from "./partials/journal-section"
+import { TaskSection } from "./partials/task-section"
 
 interface SidebarContextType {
   isCollapsed: boolean
@@ -136,9 +134,8 @@ const SidebarContent: React.FC = React.memo(() => {
         <div className="h-2 shrink-0" />
         {me._type === "Account" && <LinkSection />}
         {me._type === "Account" && <TopicSection />}
-        {/* TODO: migrate */}
-        {/* {me._type === "Account" && <JournalSection />} */}
-        {/* {me._type === "Account" && <TaskSection pathname={pathname} />} */}
+        {me._type === "Account" && <JournalSection />}
+        {me._type === "Account" && <TaskSection />}
         {me._type === "Account" && <PageSection />}
       </div>
 

@@ -27,6 +27,7 @@ import { Route as LayoutPagesProtectedProfileIndexImport } from './routes/_layou
 import { Route as LayoutPagesProtectedPagesIndexImport } from './routes/_layout/_pages/_protected/pages/index'
 import { Route as LayoutPagesProtectedOnboardingIndexImport } from './routes/_layout/_pages/_protected/onboarding/index'
 import { Route as LayoutPagesProtectedLinksIndexImport } from './routes/_layout/_pages/_protected/links/index'
+import { Route as LayoutPagesProtectedJournalsIndexImport } from './routes/_layout/_pages/_protected/journals/index'
 import { Route as LayoutauthAuthSignUpSplatImport } from './routes/_layout/(auth)/_auth.sign-up.$'
 import { Route as LayoutauthAuthSignInSplatImport } from './routes/_layout/(auth)/_auth.sign-in.$'
 import { Route as LayoutPagesProtectedPagesPageIdIndexImport } from './routes/_layout/_pages/_protected/pages/$pageId/index'
@@ -120,6 +121,12 @@ const LayoutPagesProtectedLinksIndexRoute =
     getParentRoute: () => LayoutPagesProtectedRoute,
   } as any)
 
+const LayoutPagesProtectedJournalsIndexRoute =
+  LayoutPagesProtectedJournalsIndexImport.update({
+    path: '/journals/',
+    getParentRoute: () => LayoutPagesProtectedRoute,
+  } as any)
+
 const LayoutauthAuthSignUpSplatRoute = LayoutauthAuthSignUpSplatImport.update({
   path: '/sign-up/$',
   getParentRoute: () => LayoutauthAuthRoute,
@@ -203,6 +210,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutauthAuthSignUpSplatImport
       parentRoute: typeof LayoutauthAuthImport
     }
+    '/_layout/_pages/_protected/journals/': {
+      id: '/_layout/_pages/_protected/journals/'
+      path: '/journals'
+      fullPath: '/journals'
+      preLoaderRoute: typeof LayoutPagesProtectedJournalsIndexImport
+      parentRoute: typeof LayoutPagesProtectedImport
+    }
     '/_layout/_pages/_protected/links/': {
       id: '/_layout/_pages/_protected/links/'
       path: '/links'
@@ -272,6 +286,7 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 interface LayoutPagesProtectedRouteChildren {
+  LayoutPagesProtectedJournalsIndexRoute: typeof LayoutPagesProtectedJournalsIndexRoute
   LayoutPagesProtectedLinksIndexRoute: typeof LayoutPagesProtectedLinksIndexRoute
   LayoutPagesProtectedOnboardingIndexRoute: typeof LayoutPagesProtectedOnboardingIndexRoute
   LayoutPagesProtectedPagesIndexRoute: typeof LayoutPagesProtectedPagesIndexRoute
@@ -284,6 +299,8 @@ interface LayoutPagesProtectedRouteChildren {
 }
 
 const LayoutPagesProtectedRouteChildren: LayoutPagesProtectedRouteChildren = {
+  LayoutPagesProtectedJournalsIndexRoute:
+    LayoutPagesProtectedJournalsIndexRoute,
   LayoutPagesProtectedLinksIndexRoute: LayoutPagesProtectedLinksIndexRoute,
   LayoutPagesProtectedOnboardingIndexRoute:
     LayoutPagesProtectedOnboardingIndexRoute,
@@ -362,6 +379,7 @@ export interface FileRoutesByFullPath {
   '/$': typeof LayoutPagestopicSplatRoute
   '/sign-in/$': typeof LayoutauthAuthSignInSplatRoute
   '/sign-up/$': typeof LayoutauthAuthSignUpSplatRoute
+  '/journals': typeof LayoutPagesProtectedJournalsIndexRoute
   '/links': typeof LayoutPagesProtectedLinksIndexRoute
   '/onboarding': typeof LayoutPagesProtectedOnboardingIndexRoute
   '/pages': typeof LayoutPagesProtectedPagesIndexRoute
@@ -379,6 +397,7 @@ export interface FileRoutesByTo {
   '/$': typeof LayoutPagestopicSplatRoute
   '/sign-in/$': typeof LayoutauthAuthSignInSplatRoute
   '/sign-up/$': typeof LayoutauthAuthSignUpSplatRoute
+  '/journals': typeof LayoutPagesProtectedJournalsIndexRoute
   '/links': typeof LayoutPagesProtectedLinksIndexRoute
   '/onboarding': typeof LayoutPagesProtectedOnboardingIndexRoute
   '/pages': typeof LayoutPagesProtectedPagesIndexRoute
@@ -400,6 +419,7 @@ export interface FileRoutesById {
   '/_layout/_pages/$': typeof LayoutPagestopicSplatRoute
   '/_layout/_auth/sign-in/$': typeof LayoutauthAuthSignInSplatRoute
   '/_layout/_auth/sign-up/$': typeof LayoutauthAuthSignUpSplatRoute
+  '/_layout/_pages/_protected/journals/': typeof LayoutPagesProtectedJournalsIndexRoute
   '/_layout/_pages/_protected/links/': typeof LayoutPagesProtectedLinksIndexRoute
   '/_layout/_pages/_protected/onboarding/': typeof LayoutPagesProtectedOnboardingIndexRoute
   '/_layout/_pages/_protected/pages/': typeof LayoutPagesProtectedPagesIndexRoute
@@ -419,6 +439,7 @@ export interface FileRouteTypes {
     | '/$'
     | '/sign-in/$'
     | '/sign-up/$'
+    | '/journals'
     | '/links'
     | '/onboarding'
     | '/pages'
@@ -435,6 +456,7 @@ export interface FileRouteTypes {
     | '/$'
     | '/sign-in/$'
     | '/sign-up/$'
+    | '/journals'
     | '/links'
     | '/onboarding'
     | '/pages'
@@ -454,6 +476,7 @@ export interface FileRouteTypes {
     | '/_layout/_pages/$'
     | '/_layout/_auth/sign-in/$'
     | '/_layout/_auth/sign-up/$'
+    | '/_layout/_pages/_protected/journals/'
     | '/_layout/_pages/_protected/links/'
     | '/_layout/_pages/_protected/onboarding/'
     | '/_layout/_pages/_protected/pages/'
@@ -521,6 +544,7 @@ export const routeTree = rootRoute
       "filePath": "_layout/_pages/_protected.tsx",
       "parent": "/_layout/_pages",
       "children": [
+        "/_layout/_pages/_protected/journals/",
         "/_layout/_pages/_protected/links/",
         "/_layout/_pages/_protected/onboarding/",
         "/_layout/_pages/_protected/pages/",
@@ -543,6 +567,10 @@ export const routeTree = rootRoute
     "/_layout/_auth/sign-up/$": {
       "filePath": "_layout/(auth)/_auth.sign-up.$.tsx",
       "parent": "/_layout/_auth"
+    },
+    "/_layout/_pages/_protected/journals/": {
+      "filePath": "_layout/_pages/_protected/journals/index.tsx",
+      "parent": "/_layout/_pages/_protected"
     },
     "/_layout/_pages/_protected/links/": {
       "filePath": "_layout/_pages/_protected/links/index.tsx",

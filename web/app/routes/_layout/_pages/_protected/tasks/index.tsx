@@ -7,13 +7,19 @@ import { useTaskActions } from "~/hooks/actions/use-task-actions"
 import { TaskForm } from "./-form"
 import { TaskList } from "./-list"
 import { Task } from "~/lib/schema/task"
+import { z } from "zod"
+
+const taskSearchSchema = z.object({
+  filter: z.enum(["today", "upcoming"]).optional(),
+})
 
 export const Route = createFileRoute("/_layout/_pages/_protected/tasks/")({
+  validateSearch: taskSearchSchema,
   component: () => <TaskComponent />,
 })
 
 function TaskComponent() {
-  const filter = "today"
+  const { filter } = Route.useSearch()
   const { me } = useAccount({ root: { tasks: [] } })
   const tasks = me?.root.tasks
   const { deleteTask } = useTaskActions()
@@ -64,7 +70,7 @@ function TaskComponent() {
               : "All Tasks"}
         </h1>
       </div>
-      <TaskForm filter={filter} />
+      <TaskForm />
       <TaskList
         tasks={
           filteredTasks?.filter((task): task is Task => task !== null) || []
