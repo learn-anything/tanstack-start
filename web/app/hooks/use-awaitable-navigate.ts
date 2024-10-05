@@ -12,7 +12,7 @@ export const useAwaitableNavigate = () => {
     resolveFunctionsRef.current.forEach((resolve) => resolve())
     resolveFunctionsRef.current.splice(0, resolveFunctionsRef.current.length)
   }
-  const [_, startTransition] = React.useTransition()
+  const [, startTransition] = React.useTransition()
 
   React.useEffect(() => {
     resolveAll()

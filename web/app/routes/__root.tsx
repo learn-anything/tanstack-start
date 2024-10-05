@@ -65,10 +65,9 @@ export const Route = createRootRouteWithContext<{
     { rel: "icon", href: "/favicon.ico" },
   ],
   beforeLoad: async () => {
-    const { auth, user } = await fetchClerkAuth()
+    const { user } = await fetchClerkAuth()
 
     return {
-      auth,
       user,
     }
   },

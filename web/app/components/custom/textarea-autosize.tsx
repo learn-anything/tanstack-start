@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils"
 export interface TextareaProps extends Omit<BaseTextareaAutosizeProps, "ref"> {}
 
 const TextareaAutosize = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
-  ({ className, style, ...props }, ref) => {
+  ({ className, ...props }, ref) => {
     return (
       <BaseTextareaAutosize
         className={cn(

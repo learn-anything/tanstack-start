@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { ListOfTasks, Task } from "@/lib/schema/task"
 import { Input } from "@/components/ui/input"
@@ -7,7 +7,6 @@ import { useAccount } from "@/lib/providers/jazz-provider"
 import { LaIcon } from "@/components/custom/la-icon"
 import { Checkbox } from "@/components/ui/checkbox"
 import { DatePicker } from "~/components/custom/date-picker"
-import { format } from "date-fns"
 import { useSearch } from "@tanstack/react-router"
 
 export const TaskForm: React.FC = () => {
@@ -21,12 +20,13 @@ export const TaskForm: React.FC = () => {
   const inputRef = useRef<HTMLInputElement>(null)
   const formRef = useRef<HTMLDivElement>(null)
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    saveTask()
-  }
+  const resetForm = useCallback(() => {
+    setTitle("")
+    setDueDate(filter === "today" ? new Date() : undefined)
+    setInputVisible(false)
+  }, [filter])
 
-  const saveTask = () => {
+  const saveTask = useCallback(() => {
     if (title.trim() && (filter !== "upcoming" || dueDate)) {
       if (me?.root?.tasks === undefined) {
         if (!me) return
@@ -52,12 +52,11 @@ export const TaskForm: React.FC = () => {
       me.root.tasks?.push(newTask)
       resetForm()
     }
-  }
+  }, [title, dueDate, filter, me, resetForm])
 
-  const resetForm = () => {
-    setTitle("")
-    setDueDate(filter === "today" ? new Date() : undefined)
-    setInputVisible(false)
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    saveTask()
   }
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -89,11 +88,7 @@ export const TaskForm: React.FC = () => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside)
     }
-  }, [title, dueDate])
-
-  const formattedDate = dueDate
-    ? format(dueDate, "EEE, MMMM do, yyyy")
-    : "Select a date"
+  }, [title, saveTask, resetForm])
 
   return (
     <div className="flex items-center space-x-2">

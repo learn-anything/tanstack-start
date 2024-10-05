@@ -1,25 +1,35 @@
-import * as React from "react"
-import { useAtom } from "jotai"
+import { useEffect, useState } from "react"
+import { atom, useAtom } from "jotai"
 import { atomWithStorage } from "jotai/utils"
-import { useConfirm } from "@omit/react-confirm-dialog"
-import { useLocation } from "@tanstack/react-router"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 import { isExistingUserFn } from "~/actions"
-import { useAuth } from "@clerk/tanstack-start"
+import { useLocation } from "@tanstack/react-router"
 
 const hasVisitedAtom = atomWithStorage("hasVisitedLearnAnything", false)
+const isDialogOpenAtom = atom(true)
 
 export function Onboarding() {
   const { pathname } = useLocation()
-  const [hasVisited] = useAtom(hasVisitedAtom)
-  const [isFetching, setIsFetching] = React.useState(true)
-  const [isExisting, setIsExisting] = React.useState(false)
-  const { isLoaded, isSignedIn } = useAuth()
+  const [hasVisited, setHasVisited] = useAtom(hasVisitedAtom)
+  const [isOpen, setIsOpen] = useAtom(isDialogOpenAtom)
+  const [isFetching, setIsFetching] = useState(true)
+  const [isExisting, setIsExisting] = useState(false)
 
-  React.useEffect(() => {
+  useEffect(() => {
     const loadUser = async () => {
       try {
         const existingUser = await isExistingUserFn()
         setIsExisting(existingUser)
+        setIsOpen(true)
       } catch (error) {
         console.error("Error loading user:", error)
       } finally {
@@ -27,43 +37,39 @@ export function Onboarding() {
       }
     }
 
-    if (!hasVisited && pathname !== "/" && isLoaded && isSignedIn) {
+    if (!hasVisited && pathname !== "/") {
       loadUser()
     }
-  }, [hasVisited, pathname, isLoaded, isSignedIn])
+  }, [hasVisited, pathname, setIsOpen])
+
+  const handleClose = () => {
+    setIsOpen(false)
+    setHasVisited(true)
+  }
 
   if (hasVisited || isFetching) return null
 
-  return <OnboardingContent isExistingUser={isExisting} />
-}
+  return (
+    <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
+      <AlertDialogContent className="max-w-xl">
+        <AlertDialogHeader>
+          <AlertDialogTitle>
+            <h1 className="text-2xl font-bold">Welcome to Learn Anything!</h1>
+          </AlertDialogTitle>
+        </AlertDialogHeader>
 
-function OnboardingContent({ isExistingUser }: { isExistingUser: boolean }) {
-  const [, setHasVisited] = useAtom(hasVisitedAtom)
-  const confirm = useConfirm()
-
-  React.useEffect(() => {
-    showOnboardingDialog()
-  }, [])
-
-  const showOnboardingDialog = async () => {
-    const result = await confirm({
-      title: "Welcome to Learn Anything!",
-      alertDialogDescription: {
-        asChild: true,
-      },
-      description: (
-        <div className="prose text-muted-foreground">
-          {isExistingUser && (
+        <AlertDialogDescription className="text-foreground/70 space-y-4 text-base leading-5">
+          {isExisting && (
             <>
-              <p>Existing Customer Notice</p>
+              <p className="font-medium">Existing Customer Notice</p>
               <p>
                 We noticed you are an existing Learn Anything customer. We
                 sincerely apologize for any broken experience you may have
-                encountered on the old website. We've been working hard on this
-                new version, which addresses previous issues and offers more
-                features. As an early customer, you're locked in at the{" "}
-                <strong>$3</strong> price for our upcoming pro version. Thank
-                you for your support!
+                encountered on the old website. We&apos;ve been working hard on
+                this new version, which addresses previous issues and offers
+                more features. As an early customer, you&apos;re locked in at
+                the <strong>$3</strong> price for our upcoming pro version.
+                Thank you for your support!
               </p>
             </>
           )}
@@ -75,36 +81,27 @@ function OnboardingContent({ isExistingUser }: { isExistingUser: boolean }) {
           <p>
             Try do these quick onboarding steps to get a feel for the product:
           </p>
-          <ul>
+          <ul className="list-inside list-disc">
             <li>Create your first page</li>
             <li>Add a link to a resource</li>
             <li>Update your learning status on a topic</li>
           </ul>
           <p>
-            If you have any questions, don't hesitate to reach out. Click on
-            question mark button in the bottom right corner and enter your
+            If you have any questions, don&apos;t hesitate to reach out. Click
+            on question mark button in the bottom right corner and enter your
             message.
           </p>
-        </div>
-      ),
-      cancelButton: {
-        variant: "outline",
-      },
-      confirmText: "Get Started",
-      cancelText: "Close",
-      alertDialogContent: {
-        className: "max-w-xl",
-      },
-    })
+        </AlertDialogDescription>
 
-    if (result) {
-      setHasVisited(true)
-    } else {
-      setHasVisited(true)
-    }
-  }
-
-  return null
+        <AlertDialogFooter className="mt-4">
+          <AlertDialogCancel onClick={handleClose}>Close</AlertDialogCancel>
+          <AlertDialogAction onClick={handleClose}>
+            Get Started
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  )
 }
 
 export default Onboarding

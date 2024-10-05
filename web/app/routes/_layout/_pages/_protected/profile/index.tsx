@@ -28,7 +28,7 @@ const ProfileStats: React.FC<ProfileStatsProps> = ({ number, label }) => {
 function ProfileComponent() {
   const account = useAccount()
   const username = ""
-  const { user, isSignedIn } = useUser()
+  const { user } = useUser()
   const avatarInputRef = React.useRef<HTMLInputElement>(null)
 
   const editAvatar = (event: React.ChangeEvent<HTMLInputElement>) => {

@@ -9,7 +9,7 @@ export function isValidUrl(string: string): boolean {
 
 export function isUrl(text: string): boolean {
   const pattern: RegExp =
-    /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/
+    /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/
   return pattern.test(text)
 }
 

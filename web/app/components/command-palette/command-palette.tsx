@@ -9,21 +9,19 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog"
 import { CommandGroup } from "./command-group"
-import {
-  CommandAction,
-  CommandItemType,
-  createCommandGroups,
-} from "./command-data"
+import { CommandAction, createCommandGroups } from "./command-data"
 import { useAccount, useAccountOrGuest } from "@/lib/providers/jazz-provider"
-import { searchSafeRegExp } from "@/lib/utils"
-import { atom, useAtom } from "jotai"
+import { useAtom } from "jotai"
 import { useCommandActions } from "~/hooks/use-command-actions"
-import { GraphData } from "~/lib/constants"
-
-const filterItems = (items: CommandItemType[], searchRegex: RegExp) =>
-  items.filter((item) => searchRegex.test(item.value)).slice(0, 10)
-
-export const commandPaletteOpenAtom = atom(false)
+import {
+  filterItems,
+  getTopics,
+  getPersonalLinks,
+  getPersonalPages,
+  handleAction,
+} from "./utils"
+import { searchSafeRegExp } from "~/lib/utils"
+import { commandPaletteOpenAtom } from "~/store/any-store"
 
 export function CommandPalette() {
   const { me } = useAccountOrGuest()
@@ -73,46 +71,13 @@ export function RealCommandPalette() {
     [activePage, inputValue, bounce],
   )
 
-  const topics = React.useMemo(
-    () => ({
-      heading: "Topics",
-      items: GraphData.map((topic) => ({
-        icon: "Circle" as const,
-        value: topic?.prettyName || "",
-        label: topic?.prettyName || "",
-        action: () => actions.navigateTo(`/${topic?.name}`),
-      })),
-    }),
-    [GraphData, actions],
-  )
-
+  const topics = React.useMemo(() => getTopics(actions), [actions])
   const personalLinks = React.useMemo(
-    () => ({
-      heading: "Personal Links",
-      items:
-        me?.root.personalLinks?.map((link) => ({
-          id: link?.id,
-          icon: "Link" as const,
-          value: link?.title || "Untitled",
-          label: link?.title || "Untitled",
-          action: () => actions.openLinkInNewTab(link?.url || "#"),
-        })) || [],
-    }),
+    () => getPersonalLinks(me?.root.personalLinks || [], actions),
     [me?.root.personalLinks, actions],
   )
-
   const personalPages = React.useMemo(
-    () => ({
-      heading: "Personal Pages",
-      items:
-        me?.root.personalPages?.map((page) => ({
-          id: page?.id,
-          icon: "FileText" as const,
-          value: page?.title || "Untitled",
-          label: page?.title || "Untitled",
-          action: () => actions.navigateTo(`/pages/${page?.id}`),
-        })) || [],
-    }),
+    () => getPersonalPages(me?.root.personalPages || [], actions),
     [me?.root.personalPages, actions],
   )
 
@@ -152,7 +117,7 @@ export function RealCommandPalette() {
           ...commandGroups.searchPages,
           { items: filterItems(personalPages.items, searchRegex) },
         ]
-      default:
+      default: {
         const pageCommands = commandGroups[activePage]
         if (!inputValue) return pageCommands
         return pageCommands
@@ -161,6 +126,7 @@ export function RealCommandPalette() {
             items: filterItems(group.items, searchRegex),
           }))
           .filter((group) => group.items.length > 0)
+      }
     }
   }, [
     inputValue,
@@ -171,32 +137,14 @@ export function RealCommandPalette() {
     topics,
   ])
 
-  const handleAction = React.useCallback(
+  const handleActionWrapper = React.useCallback(
     (action: CommandAction, payload?: any) => {
-      const closeDialog = () => {
-        setOpen(false)
-      }
-
-      if (typeof action === "function") {
-        action()
-        closeDialog()
-        return
-      }
-
-      switch (action) {
-        case "CHANGE_PAGE":
-          if (payload) {
-            setActivePage(payload)
-            setInputValue("")
-            bounce()
-          } else {
-            console.error(`Invalid page: ${payload}`)
-          }
-          break
-        default:
-          console.log(`Unhandled action: ${action}`)
-          closeDialog()
-      }
+      handleAction(action, payload, {
+        setActivePage,
+        setInputValue,
+        bounce,
+        closeDialog: () => setOpen(false),
+      })
     },
     [bounce, setOpen],
   )
@@ -253,7 +201,7 @@ export function RealCommandPalette() {
                   key={`${group.heading}-${index}`}
                   heading={group.heading}
                   items={group.items}
-                  handleAction={handleAction}
+                  handleAction={handleActionWrapper}
                   isLastGroup={index === array.length - 1}
                 />
               ))}

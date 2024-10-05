@@ -124,7 +124,7 @@ export const SlashCommand = Extension.create({
               })
 
               const { view } = props.editor
-              const editorNode = view.dom as HTMLElement
+              // const editorNode = view.dom as HTMLElement
 
               const getReferenceClientRect = () => {
                 if (!props.clientRect) {
@@ -151,7 +151,7 @@ export const SlashCommand = Extension.create({
                   yPos = rect.y - diff
                 }
 
-                const editorXOffset = editorNode.getBoundingClientRect().x
+                // const editorXOffset = editorNode.getBoundingClientRect().x
                 return new DOMRect(rect.x, yPos, rect.width, rect.height)
               }
 
@@ -176,7 +176,7 @@ export const SlashCommand = Extension.create({
               component.updateProps(props)
 
               const { view } = props.editor
-              const editorNode = view.dom as HTMLElement
+              // const editorNode = view.dom as HTMLElement
 
               const getReferenceClientRect = () => {
                 if (!props.clientRect) {
@@ -192,7 +192,7 @@ export const SlashCommand = Extension.create({
                 return new DOMRect(rect.x, rect.y, rect.width, rect.height)
               }
 
-              let scrollHandler = () => {
+              const scrollHandler = () => {
                 popup?.[0].setProps({
                   getReferenceClientRect,
                 })

@@ -6,12 +6,12 @@
  */
 export function resizeCanvasToDisplaySize(canvas: HTMLCanvasElement): boolean {
   // Get the size the browser is displaying the canvas in device pixels.
-  let dpr = window.devicePixelRatio
-  let { width, height } = canvas.getBoundingClientRect()
-  let display_width = Math.round(width * dpr)
-  let display_height = Math.round(height * dpr)
+  const dpr = window.devicePixelRatio
+  const { width, height } = canvas.getBoundingClientRect()
+  const display_width = Math.round(width * dpr)
+  const display_height = Math.round(height * dpr)
 
-  let need_resize =
+  const need_resize =
     canvas.width != display_width || canvas.height != display_height
 
   if (need_resize) {
@@ -30,7 +30,7 @@ export interface CanvasResizeObserver {
 }
 
 export function resize(observer: CanvasResizeObserver): boolean {
-  let resized = resizeCanvasToDisplaySize(observer.canvas)
+  const resized = resizeCanvasToDisplaySize(observer.canvas)
   observer.resized ||= resized
   return resized
 }
@@ -38,7 +38,7 @@ export function resize(observer: CanvasResizeObserver): boolean {
 export function resizeObserver(
   canvas: HTMLCanvasElement,
 ): CanvasResizeObserver {
-  let cro: CanvasResizeObserver = {
+  const cro: CanvasResizeObserver = {
     resized: false,
     canvas: canvas,
     observer: null!,

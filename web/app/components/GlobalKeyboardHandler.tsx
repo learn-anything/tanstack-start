@@ -6,8 +6,8 @@ import { useAtom } from "jotai"
 import { usePageActions } from "~/hooks/actions/use-page-actions"
 import { useAuth } from "@clerk/tanstack-start"
 import { useNavigate } from "@tanstack/react-router"
-import { commandPaletteOpenAtom } from "./command-palette/command-palette"
 import queryString from "query-string"
+import { commandPaletteOpenAtom } from "~/store/any-store"
 
 type RegisterKeyDownProps = {
   trigger: KeyFilter

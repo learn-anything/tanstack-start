@@ -304,7 +304,6 @@ const LinkList: React.FC<LinkListProps> = () => {
                           setActiveItemIndex(lastActiveIndexRef.current)
                           setKeyboardActiveIndex(lastActiveIndexRef.current)
                         }}
-                        index={index}
                         onItemSelected={(link) =>
                           navigate({
                             to: "/links",

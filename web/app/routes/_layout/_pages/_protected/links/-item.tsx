@@ -23,7 +23,6 @@ interface LinkItemProps extends React.HTMLAttributes<HTMLDivElement> {
   disabled?: boolean
   editId: string | null
   isActive: boolean
-  index: number
   onItemSelected?: (personalLink: PersonalLink) => void
   onFormClose?: () => void
 }
@@ -35,7 +34,6 @@ export const LinkItem = React.forwardRef<HTMLDivElement, LinkItemProps>(
       disabled,
       editId,
       isActive,
-      index,
       onItemSelected,
       onFormClose,
       ...props

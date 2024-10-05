@@ -146,12 +146,20 @@ export const LinkForm: React.FC<LinkFormProps> = ({
       const slug = generateUniqueSlug(values.title)
 
       if (selectedLink) {
-        const { topic, ...diffValues } = values
-
         if (!selectedTopic) {
-          selectedLink.applyDiff({ ...diffValues, slug, updatedAt: new Date() })
+          selectedLink.applyDiff({
+            ...values,
+            slug,
+            updatedAt: new Date(),
+            topic: null,
+          })
         } else {
-          selectedLink.applyDiff({ ...values, slug, topic: selectedTopic })
+          selectedLink.applyDiff({
+            ...values,
+            slug,
+            topic: selectedTopic,
+            updatedAt: new Date(),
+          })
         }
       } else {
         const newPersonalLink = PersonalLink.create(

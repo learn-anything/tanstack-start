@@ -29,12 +29,12 @@ function generateColorMap(g: fg.graph.Graph): ColorMap {
     hsl_map[g.nodes[i].key as string] = COLORS[i % COLORS.length]
   }
 
-  for (let { a, b } of g.edges) {
-    let a_hsl = hsl_map[a.key as string]
-    let b_hsl = hsl_map[b.key as string]
+  for (const { a, b } of g.edges) {
+    const a_hsl = hsl_map[a.key as string]
+    const b_hsl = hsl_map[b.key as string]
 
-    let am = a.mass - 1
-    let bm = b.mass - 1
+    const am = a.mass - 1
+    const bm = b.mass - 1
 
     hsl_map[a.key as string] = color.mix(a_hsl, b_hsl, am * am * am, bm)
     hsl_map[b.key as string] = color.mix(a_hsl, b_hsl, am, bm * bm * bm)
@@ -71,7 +71,7 @@ function generateNodesFromRawData(
 
   /* calc mass from number of connections */
   for (const node of g.nodes) {
-    let edges = fg.graph.get_node_edges(g, node)
+    const edges = fg.graph.get_node_edges(g, node)
     node.mass = fg.graph.node_mass_from_edges(edges.length)
   }
 }
@@ -117,8 +117,8 @@ const simulateGraph = (
   vw: number,
   vh: number,
 ): void => {
-  let c = gestures.canvas
-  let g = c.graph
+  const c = gestures.canvas
+  const g = c.graph
 
   alpha = alpha / 10 // slow things down a bit
 
@@ -127,23 +127,23 @@ const simulateGraph = (
   /*
 		Push nodes away from the center (the title)
 	*/
-  let grid_radius = g.options.grid_size / 2
-  let origin_x = grid_radius + c.translate.x
-  let origin_y = grid_radius + c.translate.y
-  let vmax = Math.max(vw, vh)
-  let push_radius =
+  const grid_radius = g.options.grid_size / 2
+  const origin_x = grid_radius + c.translate.x
+  const origin_y = grid_radius + c.translate.y
+  const vmax = Math.max(vw, vh)
+  const push_radius =
     (Math.min(TITLE_SIZE_PX, vw / 2, vh / 2) / vmax) *
       (g.options.grid_size / c.scale) +
     80 /* additional margin for when scrolled in */
 
-  for (let node of g.nodes) {
+  for (const node of g.nodes) {
     //
-    let dist_x = node.pos.x - origin_x
-    let dist_y = (node.pos.y - origin_y) * 2
-    let dist = Math.sqrt(dist_x * dist_x + dist_y * dist_y)
+    const dist_x = node.pos.x - origin_x
+    const dist_y = (node.pos.y - origin_y) * 2
+    const dist = Math.sqrt(dist_x * dist_x + dist_y * dist_y)
     if (dist > push_radius) continue
 
-    let strength = ease.in_expo((push_radius - dist) / push_radius)
+    const strength = ease.in_expo((push_radius - dist) / push_radius)
 
     node.vel.x += strength * (node.pos.x - origin_x) * 10 * alpha
     node.vel.y += strength * (node.pos.y - origin_y) * 10 * alpha
@@ -155,18 +155,18 @@ const simulateGraph = (
 	*/
   if (gestures.mode.type === fg.canvas.Mode.DraggingNode) {
     //
-    let node = gestures.mode.node
+    const node = gestures.mode.node
 
-    for (let edge of fg.graph.each_node_edge(g, node)) {
-      let b = edge.b === node ? edge.a : edge.b
+    for (const edge of fg.graph.each_node_edge(g, node)) {
+      const b = edge.b === node ? edge.a : edge.b
 
-      let dx =
+      const dx =
         (b.pos.x - node.pos.x) *
         g.options.link_strength *
         edge.strength *
         alpha *
         10
-      let dy =
+      const dy =
         (b.pos.y - node.pos.y) *
         g.options.link_strength *
         edge.strength *
@@ -186,26 +186,26 @@ const drawGraph = (c: fg.canvas.CanvasState, color_map: ColorMap): void => {
   /*
 		Draw text nodes
 	*/
-  let grid_size = c.graph.options.grid_size
-  let max_size = Math.max(c.ctx.canvas.width, c.ctx.canvas.height)
+  const grid_size = c.graph.options.grid_size
+  const max_size = Math.max(c.ctx.canvas.width, c.ctx.canvas.height)
 
-  let clip_rect = fg.canvas.get_ctx_clip_rect(c.ctx, { x: 100, y: 20 })
+  const clip_rect = fg.canvas.get_ctx_clip_rect(c.ctx, { x: 100, y: 20 })
 
   c.ctx.textAlign = "center"
   c.ctx.textBaseline = "middle"
 
-  for (let node of c.graph.nodes) {
-    let x = (node.pos.x / grid_size) * max_size
-    let y = (node.pos.y / grid_size) * max_size
+  for (const node of c.graph.nodes) {
+    const x = (node.pos.x / grid_size) * max_size
+    const y = (node.pos.y / grid_size) * max_size
 
     if (fg.canvas.in_rect_xy(clip_rect, x, y)) {
-      let base_size = max_size / 220
-      let mass_boost_size = max_size / 140
-      let mass_boost = (node.mass - 1) / 8 / c.scale
+      const base_size = max_size / 220
+      const mass_boost_size = max_size / 140
+      const mass_boost = (node.mass - 1) / 8 / c.scale
 
       c.ctx.font = `${base_size + mass_boost * mass_boost_size}px sans-serif`
 
-      let opacity = 0.6 + ((node.mass - 1) / 50) * 4
+      const opacity = 0.6 + ((node.mass - 1) / 50) * 4
 
       c.ctx.fillStyle =
         node.anchor || c.hovered_node === node
@@ -243,7 +243,7 @@ function init(
     canvas_el: HTMLCanvasElement | null
   },
 ) {
-  let { canvas_el, raw_nodes } = props
+  const { canvas_el, raw_nodes } = props
 
   if (canvas_el == null) return
 
@@ -256,9 +256,9 @@ function init(
   s.nodes = s.graph.nodes.slice()
   s.edges = s.graph.edges.slice()
 
-  let color_map = generateColorMap(s.graph)
+  const color_map = generateColorMap(s.graph)
 
-  let canvas_state = fg.canvas.canvasState({
+  const canvas_state = fg.canvas.canvasState({
     ctx: s.ctx,
     graph: s.graph,
     max_scale: 3,
@@ -266,7 +266,7 @@ function init(
     init_grid_pos: trig.ZERO,
   })
 
-  let gestures = (s.gestures = fg.canvas.canvasGestures({
+  const gestures = (s.gestures = fg.canvas.canvasGestures({
     canvas: canvas_state,
     onGesture: (e) => {
       switch (e.type) {
@@ -299,8 +299,8 @@ function init(
   simulateGraph(6, gestures, window.innerWidth, window.innerHeight)
 
   function loop(time: number) {
-    let is_active = gestures.mode.type === fg.canvas.Mode.DraggingNode
-    let iterations = Math.min(2, raf.calcIterations(s.frame_iter_limit, time))
+    const is_active = gestures.mode.type === fg.canvas.Mode.DraggingNode
+    const iterations = Math.min(2, raf.calcIterations(s.frame_iter_limit, time))
 
     for (let i = iterations; i > 0; i--) {
       s.alpha = raf.updateAlpha(s.alpha, is_active || time < s.bump_end)

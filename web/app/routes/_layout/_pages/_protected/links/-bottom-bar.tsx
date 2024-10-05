@@ -107,6 +107,9 @@ export const LinkBottomBar: React.FC = () => {
   }, [setGlobalLinkFormExceptionRefsAtom, exceptionRefs])
 
   const handleDelete = async (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+
     if (!personalLink || !me) return
 
     const result = await confirm({

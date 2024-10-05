@@ -22,7 +22,7 @@ export const TaskSection: React.FC = () => {
         task?.status !== "done" && task?.dueDate && isFuture(task.dueDate),
     ) || []
 
-  const [isFetching, setIsFetching] = useState(false)
+  const [, setIsFetching] = useState(false)
   const [isFeatureActive, setIsFeatureActive] = useState(false)
   const { isLoaded, isSignedIn } = useAuth()
   const { user } = useUser()

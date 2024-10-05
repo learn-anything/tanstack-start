@@ -49,8 +49,8 @@ const createKeyPredicate = (keyFilter: KeyFilter) =>
     : typeof keyFilter === "string"
       ? (event: KeyboardEvent) => event.key === keyFilter
       : keyFilter
-        ? (_event: KeyboardEvent) => true
-        : (_event: KeyboardEvent) => false
+        ? () => true
+        : () => false
 
 export function useKeyDown(
   key: KeyFilter,

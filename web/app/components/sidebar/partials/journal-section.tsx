@@ -10,7 +10,7 @@ export const JournalSection: React.FC = () => {
   const { me } = useAccount()
   const journalEntries = me?.root?.journalEntries
 
-  const [isFetching, setIsFetching] = useState(false)
+  const [, setIsFetching] = useState(false)
   const [isFeatureActive, setIsFeatureActive] = useState(false)
   const { isLoaded, isSignedIn } = useAuth()
   const { user } = useUser()

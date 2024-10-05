@@ -16,7 +16,6 @@ export interface LAEditorProps
   editorClassName?: string
   onUpdate?: (content: Content) => void
   onBlur?: (content: Content) => void
-  onNewBlock?: (content: Content) => void
   handleKeyDown?: (view: EditorView, event: KeyboardEvent) => boolean
   value?: any
   throttleDelay?: number
@@ -36,7 +35,6 @@ export const LAEditor = React.forwardRef<LAEditorRef, LAEditorProps>(
       className,
       onUpdate,
       onBlur,
-      onNewBlock,
       handleKeyDown,
       throttleDelay = 1000,
       ...props

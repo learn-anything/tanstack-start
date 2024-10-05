@@ -8,12 +8,12 @@ interface AiSearchProps {
 const AiSearch: React.FC<AiSearchProps> = (props: { searchQuery: string }) => {
   const [error, setError] = React.useState<string>("")
 
-  let root_el = React.useRef<HTMLDivElement | null>(null)
+  const root_el = React.useRef<HTMLDivElement | null>(null)
 
-  let [parser, md_el] = React.useMemo(() => {
-    let md_el = document.createElement("div")
-    let renderer = smd.default_renderer(md_el)
-    let parser = smd.parser(renderer)
+  const [parser, md_el] = React.useMemo(() => {
+    const md_el = document.createElement("div")
+    const renderer = smd.default_renderer(md_el)
+    const parser = smd.parser(renderer)
     return [parser, md_el]
   }, [])
 
@@ -24,7 +24,7 @@ const AiSearch: React.FC<AiSearchProps> = (props: { searchQuery: string }) => {
   }, [md_el])
 
   React.useEffect(() => {
-    let question = props.searchQuery
+    const question = props.searchQuery
 
     fetchData()
     async function fetchData() {
@@ -52,17 +52,18 @@ const AiSearch: React.FC<AiSearchProps> = (props: { searchQuery: string }) => {
       const reader = response.body.getReader()
       const decoder = new TextDecoder()
 
-      while (true) {
-        let res = await reader.read()
+      let done = false
+      while (!done) {
+        const res = await reader.read()
 
         if (res.value) {
-          let text = decoder.decode(res.value)
+          const text = decoder.decode(res.value)
           smd.parser_write(parser, text)
         }
 
         if (res.done) {
           smd.parser_end(parser)
-          break
+          done = true
         }
       }
     }

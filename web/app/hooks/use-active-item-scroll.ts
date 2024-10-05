@@ -13,14 +13,14 @@ export function useActiveItemScroll<T extends HTMLElement>(
   const { activeIndex } = options
   const elementRefs = React.useRef<ElementRefs<T>>([])
 
-  const scrollActiveElementIntoView = (index: number) => {
+  const scrollActiveElementIntoView = React.useCallback((index: number) => {
     const activeElement = elementRefs.current[index]
     activeElement?.focus()
     // activeElement?.scrollIntoView({ block: "nearest" })
-  }
+  }, [])
 
   React.useEffect(() => {
-    if (activeIndex) {
+    if (activeIndex !== null) {
       scrollActiveElementIntoView(activeIndex)
     }
   }, [activeIndex, scrollActiveElementIntoView])
