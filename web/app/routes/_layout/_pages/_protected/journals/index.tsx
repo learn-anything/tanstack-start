@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router"
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { JournalEntry, JournalEntryLists } from "@/lib/schema/journal"
 import { useAccount } from "@/lib/providers/jazz-provider"
 import { Button } from "@/components/ui/button"
@@ -7,8 +7,22 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { calendarFormatDate } from "@/lib/utils"
 import { Calendar } from "@/components/ui/calendar"
+import { getFeatureFlag } from "~/actions"
 
 export const Route = createFileRoute("/_layout/_pages/_protected/journals/")({
+  beforeLoad: async ({ context }) => {
+    if (!context.user.id) {
+      throw new Error("Unauthorized")
+    }
+
+    const flag = await getFeatureFlag({ name: "JOURNAL" })
+    const canAccess = context.user?.emailAddresses.some((email) =>
+      flag?.emails.includes(email.emailAddress),
+    )
+    if (!canAccess) {
+      throw new Error("Unauthorized")
+    }
+  },
   component: () => <JournalComponent />,
 })
 
@@ -20,10 +34,6 @@ function JournalComponent() {
   const notes =
     me?.root?.journalEntries ||
     (me ? JournalEntryLists.create([], { owner: me }) : [])
-
-  useEffect(() => {
-    console.log("me:", me)
-  }, [me])
 
   const selectDate = (selectedDate: Date | undefined) => {
     if (selectedDate) {

@@ -18,15 +18,26 @@ const DEFAULT_VALUES = {
   FAVICON: null,
 }
 
+export const fetchClerkAuth = createServerFn("GET", async (_, ctx) => {
+  const auth = await getAuth(ctx.request)
+
+  if (!auth.userId) {
+    throw new Error("Unauthorized")
+  }
+
+  const user = await clerkClient({
+    telemetry: { disabled: true },
+  }).users.getUser(auth.userId)
+
+  return {
+    auth,
+    user,
+  }
+})
+
 export const getFeatureFlag = createServerFn(
   "GET",
-  async (data: { name: string }, { request }) => {
-    const auth = await getAuth(request)
-
-    if (!auth.userId) {
-      throw new Error("Unauthorized")
-    }
-
+  async (data: { name: string }) => {
     const response = await get.featureFlag.with({
       name: data.name,
     })

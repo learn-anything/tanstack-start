@@ -1,31 +1,16 @@
 /// <reference types="vite/client" />
-import { getAuth } from "@clerk/tanstack-start/server"
 import type { QueryClient } from "@tanstack/react-query"
 import {
   Outlet,
   ScrollRestoration,
   createRootRouteWithContext,
 } from "@tanstack/react-router"
-import {
-  Body,
-  Head,
-  Html,
-  Meta,
-  Scripts,
-  createServerFn,
-} from "@tanstack/start"
+import { Body, Head, Html, Meta, Scripts } from "@tanstack/start"
 import * as React from "react"
+import { fetchClerkAuth } from "~/actions"
 import { DefaultCatchBoundary } from "~/components/DefaultCatchBoundary.js"
 import { NotFound } from "~/components/NotFound.js"
 import appCss from "~/styles/app.css?url"
-
-const fetchClerkAuth = createServerFn("GET", async (_, ctx) => {
-  const user = await getAuth(ctx.request)
-
-  return {
-    user,
-  }
-})
 
 export const TanStackRouterDevtools =
   process.env.NODE_ENV === "production"
@@ -80,9 +65,10 @@ export const Route = createRootRouteWithContext<{
     { rel: "icon", href: "/favicon.ico" },
   ],
   beforeLoad: async () => {
-    const { user } = await fetchClerkAuth()
+    const { auth, user } = await fetchClerkAuth()
 
     return {
+      auth,
       user,
     }
   },
