@@ -8,27 +8,27 @@ import { TaskForm } from "./-form"
 import { TaskList } from "./-list"
 import { Task } from "~/lib/schema/task"
 import { z } from "zod"
-import { getFeatureFlag } from "~/actions"
+// import { getFeatureFlag } from "~/actions"
 
 const taskSearchSchema = z.object({
   filter: z.enum(["today", "upcoming"]).optional(),
 })
 
 export const Route = createFileRoute("/_layout/_pages/_protected/tasks/")({
-  beforeLoad: async ({ context }) => {
-    if (!context.user.id) {
-      throw new Error("Unauthorized")
-    }
+  // beforeLoad: async ({ context }) => {
+  //   if (!context.user.id) {
+  //     throw new Error("Unauthorized")
+  //   }
 
-    const flag = await getFeatureFlag({ name: "TASK" })
-    const canAccess = context.user?.emailAddresses.some((email) =>
-      flag?.emails.includes(email.emailAddress),
-    )
+  //   const flag = await getFeatureFlag({ name: "TASK" })
+  //   const canAccess = context.user?.emailAddresses.some((email) =>
+  //     flag?.emails.includes(email.emailAddress),
+  //   )
 
-    if (!canAccess) {
-      throw new Error("Unauthorized")
-    }
-  },
+  //   if (!canAccess) {
+  //     throw new Error("Unauthorized")
+  //   }
+  // },
   validateSearch: taskSearchSchema,
   component: () => <TaskComponent />,
 })

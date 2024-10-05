@@ -7,22 +7,22 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { calendarFormatDate } from "@/lib/utils"
 import { Calendar } from "@/components/ui/calendar"
-import { getFeatureFlag } from "~/actions"
+// import { getFeatureFlag } from "~/actions"
 
 export const Route = createFileRoute("/_layout/_pages/_protected/journals/")({
-  beforeLoad: async ({ context }) => {
-    if (!context.user.id) {
-      throw new Error("Unauthorized")
-    }
+  // beforeLoad: async ({ context }) => {
+  //   if (!context.user.id) {
+  //     throw new Error("Unauthorized")
+  //   }
 
-    const flag = await getFeatureFlag({ name: "JOURNAL" })
-    const canAccess = context.user?.emailAddresses.some((email) =>
-      flag?.emails.includes(email.emailAddress),
-    )
-    if (!canAccess) {
-      throw new Error("Unauthorized")
-    }
-  },
+  //   const flag = await getFeatureFlag({ name: "JOURNAL" })
+  //   const canAccess = context.user?.emailAddresses.some((email) =>
+  //     flag?.emails.includes(email.emailAddress),
+  //   )
+  //   if (!canAccess) {
+  //     throw new Error("Unauthorized")
+  //   }
+  // },
   component: () => <JournalComponent />,
 })
 

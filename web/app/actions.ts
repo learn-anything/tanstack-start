@@ -25,13 +25,13 @@ export const fetchClerkAuth = createServerFn("GET", async (_, ctx) => {
     throw new Error("Unauthorized")
   }
 
-  const user = await clerkClient({
-    telemetry: { disabled: true },
-  }).users.getUser(auth.userId)
+  // const user = await clerkClient({
+  //   telemetry: { disabled: true },
+  // }).users.getUser(auth.userId)
 
   return {
-    auth,
-    user,
+    user: auth,
+    // user,
   }
 })
 
