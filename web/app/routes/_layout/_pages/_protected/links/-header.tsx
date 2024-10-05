@@ -20,20 +20,16 @@ import {
 } from "@/components/ui/select"
 import { useAtom } from "jotai"
 import { linkSortAtom } from "@/store/link"
-import { atom } from "jotai"
 import { LEARNING_STATES, LearningStateValue } from "@/lib/constants"
 import { FancySwitch } from "@omit/react-fancy-switch"
 import { cn } from "@/lib/utils"
 import { LaIcon } from "@/components/custom/la-icon"
-import { useSearch } from "@tanstack/react-router"
-import { useAwaitableNavigate } from "~/hooks/use-awaitable-navigate"
+import { useNavigate, useSearch } from "@tanstack/react-router"
 
 const ALL_STATES = [
   { label: "All", value: "all", icon: "List", className: "text-foreground" },
   ...LEARNING_STATES,
 ]
-
-export const learningStateAtom = atom<string>("all")
 
 export const LinkHeader = React.memo(() => {
   const isTablet = useMedia("(max-width: 1024px)")
@@ -69,35 +65,26 @@ export const LinkHeader = React.memo(() => {
 LinkHeader.displayName = "LinkHeader"
 
 const LearningTab = React.memo(() => {
-  const awaitableNavigate = useAwaitableNavigate()
-  const [activeTab, setActiveTab] = useAtom(learningStateAtom)
-  const { state: activeState } = useSearch({
+  const navigate = useNavigate()
+  const { state } = useSearch({
     from: "/_layout/_pages/_protected/links/",
   })
 
   const handleTabChange = React.useCallback(
     async (value: string) => {
-      if (value !== activeTab) {
-        await awaitableNavigate({
+      if (value !== state) {
+        navigate({
           to: "/links",
           search: { state: value as LearningStateValue },
         })
-
-        setActiveTab(value)
       }
     },
-    [activeTab, setActiveTab],
+    [state, navigate],
   )
-
-  React.useEffect(() => {
-    if (activeState !== activeTab) {
-      setActiveTab(activeState)
-    }
-  }, [activeState, activeTab, setActiveTab])
 
   return (
     <FancySwitch
-      value={activeTab}
+      value={state}
       onChange={(value) => {
         handleTabChange(value as string)
       }}

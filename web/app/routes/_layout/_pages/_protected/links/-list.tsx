@@ -25,7 +25,6 @@ import { PersonalLinkLists } from "@/lib/schema/personal-link"
 import { useAtom } from "jotai"
 import { linkSortAtom } from "@/store/link"
 import { LinkItem } from "./-item"
-import { learningStateAtom } from "./-header"
 import { useConfirm } from "@omit/react-confirm-dialog"
 import { useKeyDown } from "@/hooks/use-key-down"
 import { isModKey } from "@/lib/utils"
@@ -56,10 +55,13 @@ const LinkList: React.FC<LinkListProps> = () => {
     number | null
   >(null)
   const [, setIsDeleteConfirmShown] = useAtom(isDeleteConfirmShownAtom)
-  const { create: createMode, editId } = useSearch({
+  const {
+    create: createMode,
+    editId,
+    state,
+  } = useSearch({
     from: "/_layout/_pages/_protected/links/",
   })
-  const [activeLearningState] = useAtom(learningStateAtom)
   const [draggingId, setDraggingId] = React.useState<UniqueIdentifier | null>(
     null,
   )
@@ -77,11 +79,11 @@ const LinkList: React.FC<LinkListProps> = () => {
   const filteredLinks = React.useMemo(
     () =>
       personalLinks.filter((link) => {
-        if (activeLearningState === "all") return true
+        if (state === "all") return true
         if (!link?.learningState) return false
-        return link.learningState === activeLearningState
+        return link.learningState === state
       }),
-    [personalLinks, activeLearningState],
+    [personalLinks, state],
   )
 
   const sortedLinks = React.useMemo(
