@@ -64,11 +64,16 @@ export const Route = createRootRouteWithContext<{
     { rel: "manifest", href: "/site.webmanifest", color: "#fffff" },
     { rel: "icon", href: "/favicon.ico" },
   ],
-  beforeLoad: async () => {
-    const { user } = await fetchClerkAuth()
+  beforeLoad: async ({ cause }) => {
+    if (cause !== "stay") {
+      const { user } = await fetchClerkAuth()
+      return {
+        user,
+      }
+    }
 
     return {
-      user,
+      user: null,
     }
   },
   errorComponent: (props) => {
