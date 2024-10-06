@@ -21,17 +21,8 @@ const DEFAULT_VALUES = {
 export const fetchClerkAuth = createServerFn("GET", async (_, ctx) => {
   const auth = await getAuth(ctx.request)
 
-  if (!auth.userId) {
-    throw new Error("Unauthorized")
-  }
-
-  // const user = await clerkClient({
-  //   telemetry: { disabled: true },
-  // }).users.getUser(auth.userId)
-
   return {
     user: auth,
-    // user,
   }
 })
 
@@ -50,15 +41,12 @@ export const sendFeedbackFn = createServerFn(
   "POST",
   async (data: { content: string }, { request }) => {
     const auth = await getAuth(request)
-
     if (!auth.userId) {
       throw new Error("Unauthorized")
     }
-
     const user = await clerkClient({
       telemetry: { disabled: true },
     }).users.getUser(auth.userId)
-
     await create.feedback.with({
       message: data.content,
       emailFrom: user.emailAddresses[0].emailAddress,
@@ -72,7 +60,7 @@ export const isExistingUserFn = createServerFn(
     const auth = await getAuth(request)
 
     if (!auth.userId) {
-      throw new Error("Unauthorized")
+      return false
     }
 
     const user = await clerkClient({
